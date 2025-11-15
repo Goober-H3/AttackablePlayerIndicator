@@ -13,10 +13,10 @@ import javax.inject.Inject;
 public class AttackablePlayerOverlay extends Overlay
 {
     private final Client client;
-    private final AttackablePlayerConfig config;
+    private final com.AttackablePlayerIndicator.AttackablePlayerConfig config;
 
     @Inject
-    public AttackablePlayerOverlay(Client client, AttackablePlayerConfig config) {
+    public AttackablePlayerOverlay(Client client, com.AttackablePlayerIndicator.AttackablePlayerConfig config) {
         this.client = client;
         this.config = config;
         setPosition(OverlayPosition.DYNAMIC);
@@ -46,10 +46,40 @@ public class AttackablePlayerOverlay extends Overlay
 
             int theirLevel = player.getCombatLevel();
             if (theirLevel >= minAttackable && theirLevel <= maxAttackable) {
-                OverlayUtil.renderActorOverlay(graphics, player, "", Color.RED);
+                //OverlayUtil.renderActorOverlay(graphics, player, "", Color.RED);
+                //renderPlayerOutline(graphics, player, Color.RED);
+                renderTileOutline(graphics, player);
             }
         }
 
         return null;
+    }
+    private void renderTileOutline(Graphics2D graphics, Player player)
+    {
+        Polygon tilePoly = player.getCanvasTilePoly();
+        if (tilePoly != null)
+        {
+            // Muted red color (darker, less saturated)
+            Color mutedRed = new Color(180, 50, 50); // Or try: new Color(150, 70, 70)
+
+            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            graphics.setColor(mutedRed);
+            graphics.setStroke(new BasicStroke(1.0f)); // Thin 1-pixel line
+            graphics.draw(tilePoly);
+        }
+    }
+    private void renderPlayerOutline(Graphics2D graphics, Player player, Color color)
+    {
+        Shape hull = player.getConvexHull();
+        if (hull != null)
+        {
+
+            // Enable anti-aliasing for smooth, crisp edges
+            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            graphics.setColor(color);
+            graphics.setStroke(new BasicStroke(1.0f)); // Thinnest stroke
+            graphics.draw(hull);
+        }
     }
 }

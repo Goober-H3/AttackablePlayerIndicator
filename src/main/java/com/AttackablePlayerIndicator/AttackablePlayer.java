@@ -1,5 +1,7 @@
 package com.AttackablePlayerIndicator;
 
+import com.AttackablePlayerIndicator.AttackablePlayerConfig;
+import com.AttackablePlayerIndicator.AttackablePlayerOverlay;
 import com.google.inject.Provides;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -13,9 +15,10 @@ import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 
-@Slf4j
 @PluginDescriptor(
-        name = "Attackable Player Indicator"
+        name = "Attackable Player Indicator",
+        description = "Highlights attackable targets in bounty hunter",
+        tags = {"bh", "bounty hunter", "pvp", "pk"}
 )
 public class AttackablePlayer extends Plugin
 {
@@ -35,14 +38,12 @@ public class AttackablePlayer extends Plugin
     protected void startUp() throws Exception
     {
         overlayManager.add(overlay);
-        log.debug("Attackable Player Indicator started!");
     }
 
     @Override
     protected void shutDown() throws Exception
     {
         overlayManager.remove(overlay);
-        log.debug("Attackable Player Indicator stopped!");
     }
 
     @Subscribe
